@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Time Counter</title>
+    <meta name="gi" content="ahlava.util.time-log">
+    <meta name="gu" content="none">
+    <meta name="gf" content="no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="game.css">
+    <script src="loader.js"></script>
+</head>
+<body>
+    <h1>How much time did I spend?</h1>
+
+    <input id="date" class="form-input" type="date" aria-label="Date">
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>From</th>
+                <th>To</th>
+            </tr>
+        </thead>
+        <tbody id="rows">
+            <tr r-for="row of v.rows">
+                <td r-var="l.row.Category"></td>
+                <td><span r-var="f.ft(l.row.From)"></span></td>
+                <td><span r-var="f.ft(l.row.To)"></span></td>
+            </tr>
+            <tr>
+                <td>
+                    <select id="category" class="form-input" aria-label="Category" r-val="w.new-category">
+                        <option value="">Select a category</option>
+                        <option r-for="category of v.categories" r-var="l.category"></option>
+                        <option value="_add-new-category">Add new category</option>
+                    </select>
+                </td>
+                <td>
+                    <input id="from" class="form-input" type="time" aria-label="From" r-val="w.new-from">
+                </td>
+                <td>
+                    <input id="to" class="form-input" type="time" aria-label="To" r-val="w.new-to">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button id="add" class="btn btn-primary w-100">+</button>
+</body>
+
+</html>
