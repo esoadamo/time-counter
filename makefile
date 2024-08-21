@@ -16,7 +16,7 @@ autobuild:
 		node ../../QRGames/util-games-builder/run-from-source.js game.html
 
 autobuild-local:
-		node ..../../QRGames/util-games-builder/run-from-source.js  --web-libs=..../../QRGames/web-libs/ --web-path=..../../QRGames/web-qrpr.eu/ game.html
+		node ../../QRGames/util-games-builder/run-from-source.js  --web-libs=../../QRGames/web-libs/ --web-path=../../QRGames/web-qrpr.eu/ game.html
 
 .PHONY: clean compile run debug
 .SILENT:

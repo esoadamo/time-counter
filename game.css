@@ -16,6 +16,10 @@ body {
     color: var(--theme-contrast, inherit) !important;
 }
 
+td, th {
+    color: var(--theme-contrast, inherit) !important;
+}
+
 body > * {
     margin-bottom: 20px !important;
 }

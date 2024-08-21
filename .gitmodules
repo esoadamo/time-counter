@@ -1,3 +1,0 @@
-[submodule "assets/private"]
-	path = assets/private
-	url = ssh://git@git.hlavacek.win:8022/adam/space-truck-simulator-assets-private.git
