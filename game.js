@@ -49,6 +49,18 @@ async function renderRows() {
             rowDate.getMonth() === selectedMonth &&
             rowDate.getFullYear() === selectedYear;
     });
+    // Set starting time to the largest ending time if user uses real times
+    const largestStartingMinutes = Math.max(...ITEMS_RENDERED.variables.rows.map(row => {
+        const rowDate = new Date(row.From);
+        return rowDate.getHours() * 60 + rowDate.getMinutes();
+    }));
+    if (largestStartingMinutes) {
+        const largestEndingMinutes = Math.max(...ITEMS_RENDERED.variables.rows.map(row => {
+            const rowDate = new Date(row.To);
+            return rowDate.getHours() * 60 + rowDate.getMinutes();
+        }));
+        ITEMS_RENDERED.setValue('new-from', `${Math.floor(largestEndingMinutes / 60).toString().padStart(2, '0')}:${(largestEndingMinutes % 60).toString().padStart(2, '0')}`);
+    }
 
     // Find all existing categories
     ITEMS_RENDERED.variables.categories = Array.from(new Set(rows.map(row => row.Category)));
