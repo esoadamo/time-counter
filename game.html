@@ -48,6 +48,22 @@
     </table>
 
     <button id="add" class="btn btn-primary w-100">+</button>
+
+    <h2><span r-var="v.year"></span> / <span r-var="v.monthName"></span></h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Time</th>
+            </tr>
+        </thead>
+        <tbody id="summary">
+            <tr r-for="row of v.summary">
+                <td r-var="l.row.category"></td>
+                <td><span r-var="l.row.hours"></span>h</td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 
 </html>

@@ -30,7 +30,7 @@ function onValueChanges(value, input) {
     BTN_ADD.disabled = !ITEMS_RENDERED.getValue('new-from') || !ITEMS_RENDERED.getValue('new-to') || !ITEMS_RENDERED.getValue('new-category');
 }
 
-const ITEMS_RENDERED = new GRenderer(document.querySelector('#rows'), {rows: [], categories: []}, {}, {ft: formatTime, $onValueChange: onValueChanges});
+const ITEMS_RENDERED = new GRenderer(document.querySelector('body'), {rows: [], categories: [], summary: [], monthName: '', year: ''}, {}, {ft: formatTime, $onValueChange: onValueChanges});
 
 async function renderRows() {
     const selectedDate = new Date(INPUT_DATE.value);
@@ -38,14 +38,32 @@ async function renderRows() {
     const selectedMonth = selectedDate.getMonth();
     const selectedYear = selectedDate.getFullYear();
 
+    ITEMS_RENDERED.variables.monthName = selectedDate.toLocaleString('default', {month: 'long'});
+    ITEMS_RENDERED.variables.year = selectedYear;
+
     const rows = await loadRows();
+    // Filter only rows matching current date
     ITEMS_RENDERED.variables.rows = rows.filter(row => {
         const rowDate = new Date(row.From);
         return rowDate.getDate() === selectedDay &&
             rowDate.getMonth() === selectedMonth &&
             rowDate.getFullYear() === selectedYear;
     });
+
+    // Find all existing categories
     ITEMS_RENDERED.variables.categories = Array.from(new Set(rows.map(row => row.Category)));
+
+    // Generate summary for current month
+    ITEMS_RENDERED.variables.summary = ITEMS_RENDERED.variables.categories.map(category => ({category, hours: 0}));
+    rows.filter((row) => {
+        const rowDate = new Date(row.From);
+        return rowDate.getMonth() === selectedMonth &&
+            rowDate.getFullYear() === selectedYear;
+    }).forEach((row) => {
+        const hours = (new Date(row.To) - new Date(row.From)) / 3600000;
+        ITEMS_RENDERED.variables.summary.find(s => s.category === row.Category).hours += hours;
+    });
+    ITEMS_RENDERED.variables.summary.sort((a, b) => b.hours - a.hours);
 
     ITEMS_RENDERED.render();
 }
@@ -63,11 +81,12 @@ BTN_ADD.addEventListener('click', async () => {
         To: to.toISOString()
     });
 
+    ITEMS_RENDERED.setValue('new-from', '');
+    ITEMS_RENDERED.setValue('new-to', '');
     renderRows().then(() => BTN_ADD.disabled = false);
 });
 
 INPUT_DATE.addEventListener('change', () => renderRows().then());
 INPUT_DATE.value = new Date().toISOString().split('T')[0];
+ITEMS_RENDERED.setValue('new-from', '00:00');
 renderRows().then();
-
-
